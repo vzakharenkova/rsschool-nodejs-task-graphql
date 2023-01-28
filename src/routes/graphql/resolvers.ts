@@ -113,3 +113,16 @@ export async function userSubscribedToResolver(
     inArray: parent.id,
   });
 }
+
+export async function subscribedToUserResolver(
+  parent: any,
+  _args: any,
+  context: FastifyInstance
+) {
+  return parent.subscribedToUserIds.map(async (id: string) => {
+    return await context.db.users.findOne({
+      key: 'id',
+      equals: id,
+    });
+  });
+}

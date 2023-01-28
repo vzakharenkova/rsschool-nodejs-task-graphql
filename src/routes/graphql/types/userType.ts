@@ -9,6 +9,7 @@ import {
   memberTypeByUserIdResolver,
   postsByUserIdResolver,
   profileByUserIdResolver,
+  subscribedToUserResolver,
   userSubscribedToResolver,
 } from '../resolvers';
 import { memberTypeType } from './memberTypeType';
@@ -49,6 +50,10 @@ export const userType = new GraphQLObjectType({
     userSubscribedTo: {
       type: new GraphQLList(basicUserType),
       resolve: userSubscribedToResolver,
+    },
+    subscribedToUser: {
+      type: new GraphQLList(basicUserType),
+      resolve: subscribedToUserResolver,
     },
   },
 });
