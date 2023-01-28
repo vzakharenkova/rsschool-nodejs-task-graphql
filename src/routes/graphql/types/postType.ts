@@ -1,11 +1,26 @@
-import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
+
+const postFields = {
+  title: { type: new GraphQLNonNull(GraphQLString) },
+  content: { type: new GraphQLNonNull(GraphQLString) },
+  userId: { type: new GraphQLNonNull(GraphQLID) },
+};
 
 export const postType = new GraphQLObjectType({
   name: 'Post',
   fields: {
-    id: { type: GraphQLID },
-    title: { type: GraphQLString },
-    content: { type: GraphQLString },
-    userId: { type: GraphQLID },
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    ...postFields,
   },
+});
+
+export const createPostInputType = new GraphQLInputObjectType({
+  name: 'CreatePostInput',
+  fields: postFields,
 });

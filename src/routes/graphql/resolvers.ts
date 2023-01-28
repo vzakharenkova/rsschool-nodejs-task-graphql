@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { CreatePostDTO } from '../../utils/DB/entities/DBPosts';
 import { CreateProfileDTO } from '../../utils/DB/entities/DBProfiles';
 import { CreateUserDTO } from '../../utils/DB/entities/DBUsers';
 import {
@@ -6,6 +7,7 @@ import {
   getMemberTypes,
 } from '../member-types/memberTypesHandlers';
 import {
+  createPost,
   getPostById,
   getPosts,
   getPostsByUserId,
@@ -104,6 +106,18 @@ export async function postResolver(
   context: FastifyInstance
 ) {
   return await getPostById(context, args.id);
+}
+
+export async function createPostResolver(
+  _parent: any,
+  args: { data: CreatePostDTO },
+  context: FastifyInstance
+) {
+  const post: CreatePostDTO = {
+    ...args.data,
+  };
+
+  return await createPost(context, post);
 }
 
 export async function memberTypesResolver(

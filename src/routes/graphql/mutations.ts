@@ -1,4 +1,9 @@
-import { createProfileResolver, createUserResolver } from './resolvers';
+import {
+  createPostResolver,
+  createProfileResolver,
+  createUserResolver,
+} from './resolvers';
+import { createPostInputType, postType } from './types/postType';
 import { createProfileInputType, profileType } from './types/profileType';
 import { createUserInputType, userType } from './types/userType';
 
@@ -22,4 +27,15 @@ export const createProfileMutation = {
     },
   },
   resolve: createProfileResolver,
+};
+
+export const createPostMutation = {
+  type: postType,
+  args: {
+    data: {
+      name: 'data',
+      type: createPostInputType,
+    },
+  },
+  resolve: createPostResolver,
 };
