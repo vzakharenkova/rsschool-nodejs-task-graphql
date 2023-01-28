@@ -74,6 +74,23 @@
      }
      ``` 
       2.7. Get users with their `userSubscribedTo`, `subscribedToUser` (additionally for each user in `userSubscribedTo`, `subscribedToUser` add their `userSubscribedTo`, `subscribedToUser`).
+      ```    
+     query  {
+         users { 
+            id
+            userSubscribedTo { 
+               id 
+               userSubscribedTo { id }
+               subscribedToUser { id }
+            }
+            subscribedToUser { 
+               id 
+               userSubscribedTo { id }
+               subscribedToUser { id }
+            }           
+         }
+     }
+     ``` 
    - Create gql requests:  
      2.8. Create user.  
      2.9. Create profile.  
