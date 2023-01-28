@@ -103,9 +103,17 @@
         }
      }
      ```  
-     4.9. Create profile.  
-     5.10. Create post.  
-     6.11. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
+     2.9. Create profile. 
+     ```
+     mutation ($data: CreateProfileInput!) {
+         createProfile(data: $data) {
+            id
+            userId
+         }
+     } 
+     ```
+     2.10. Create post.  
+     2.11. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
    - Update gql requests:  
      2.12. Update user.  
      2.13. Update profile.  
