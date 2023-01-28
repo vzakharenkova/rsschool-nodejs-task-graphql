@@ -2,12 +2,19 @@ import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-sc
 import { idParamSchema } from '../../utils/reusedSchemas';
 import { createPostBodySchema, changePostBodySchema } from './schema';
 import type { PostEntity } from '../../utils/DB/entities/DBPosts';
+import {
+  createPost,
+  deletePost,
+  getPostById,
+  getPosts,
+  updatePost,
+} from './postsHandlers';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
 ): Promise<void> => {
   fastify.get('/', async function (request, reply): Promise<PostEntity[]> {
-    return await fastify.db.posts.findMany();
+    return await getPosts(fastify);
   });
 
   fastify.get(
@@ -19,13 +26,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<PostEntity> {
       const { id } = request.params;
-      const post = await fastify.db.posts.findOne({ key: 'id', equals: id });
 
-      if (!post) {
-        throw fastify.httpErrors.notFound();
-      }
-
-      return post;
+      return await getPostById(fastify, id);
     }
   );
 
@@ -37,7 +39,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async function (request, reply): Promise<PostEntity> {
-      return await fastify.db.posts.create(request.body);
+      return await createPost(fastify, request.body);
     }
   );
 
@@ -50,13 +52,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<PostEntity> {
       const { id } = request.params;
-      const post = await fastify.db.posts.findOne({ key: 'id', equals: id });
 
-      if (!post) {
-        throw fastify.httpErrors.badRequest();
-      }
-
-      return await fastify.db.posts.delete(id);
+      return await deletePost(fastify, id);
     }
   );
 
@@ -70,13 +67,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<PostEntity> {
       const { id } = request.params;
-      const post = await fastify.db.posts.findOne({ key: 'id', equals: id });
 
-      if (!post) {
-        throw fastify.httpErrors.badRequest();
-      }
-
-      return await fastify.db.posts.change(id, request.body);
+      return await updatePost(fastify, id, request.body);
     }
   );
 };

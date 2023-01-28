@@ -2,12 +2,19 @@ import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-sc
 import { idParamSchema } from '../../utils/reusedSchemas';
 import { createProfileBodySchema, changeProfileBodySchema } from './schema';
 import type { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
+import {
+  createProfile,
+  deleteProfile,
+  getProfileById,
+  getProfiles,
+  updateProfile,
+} from './profilesHandlers';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
 ): Promise<void> => {
   fastify.get('/', async function (request, reply): Promise<ProfileEntity[]> {
-    return await fastify.db.profiles.findMany();
+    return await getProfiles(fastify);
   });
 
   fastify.get(
@@ -19,16 +26,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<ProfileEntity> {
       const { id } = request.params;
-      const profile = await fastify.db.profiles.findOne({
-        key: 'id',
-        equals: id,
-      });
 
-      if (!profile) {
-        throw fastify.httpErrors.notFound();
-      }
-
-      return profile;
+      return await getProfileById(fastify, id);
     }
   );
 
@@ -40,17 +39,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async function (request, reply): Promise<ProfileEntity> {
-      const profile = await fastify.db.profiles.findOne({
-        key: 'userId',
-        equals: request.body.userId,
-      });
-      const memberType = ['basic', 'business'];
-
-      if (profile || !memberType.includes(request.body.memberTypeId)) {
-        throw fastify.httpErrors.badRequest();
-      }
-
-      return await fastify.db.profiles.create(request.body);
+      return await createProfile(fastify, request.body);
     }
   );
 
@@ -64,16 +53,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     async function (request, reply): Promise<ProfileEntity> {
       const { id } = request.params;
 
-      const profile = await fastify.db.profiles.findOne({
-        key: 'id',
-        equals: id,
-      });
-
-      if (!profile) {
-        throw fastify.httpErrors.badRequest();
-      }
-
-      return await fastify.db.profiles.delete(id);
+      return await deleteProfile(fastify, id);
     }
   );
 
@@ -87,16 +67,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async function (request, reply): Promise<ProfileEntity> {
       const { id } = request.params;
-      const profile = await fastify.db.profiles.findOne({
-        key: 'id',
-        equals: id,
-      });
 
-      if (!profile) {
-        throw fastify.httpErrors.badRequest();
-      }
-
-      return await fastify.db.profiles.change(id, request.body);
+      return await updateProfile(fastify, id, request.body);
     }
   );
 };
