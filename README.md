@@ -112,7 +112,17 @@
          }
      } 
      ```
-     2.10. Create post.  
+     2.10. Create post.
+     ```
+     mutation ($data: CreatePostInput!) {
+         createPost(data: $data) {
+            id
+            title
+            content
+            userId
+         }
+     }
+     ```
      2.11. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
    - Update gql requests:  
      2.12. Update user.  
