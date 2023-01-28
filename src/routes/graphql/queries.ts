@@ -1,9 +1,13 @@
-import { GraphQLList } from 'graphql';
+import { GraphQLID, GraphQLList } from 'graphql';
 import {
   usersResolver,
   profilesResolver,
   postsResolver,
   memberTypesResolver,
+  userResolver,
+  profileResolver,
+  postResolver,
+  memberTypeResolver,
 } from './resolvers';
 import { memberTypeType } from './types/memberTypeType';
 import { postType } from './types/postType';
@@ -15,9 +19,25 @@ export const usersQuery = {
   resolve: usersResolver,
 };
 
+export const userQuery = {
+  type: userType,
+  args: {
+    id: { type: GraphQLID },
+  },
+  resolve: userResolver,
+};
+
 export const profilesQuery = {
   type: new GraphQLList(profileType),
   resolve: profilesResolver,
+};
+
+export const profileQuery = {
+  type: profileType,
+  args: {
+    id: { type: GraphQLID },
+  },
+  resolve: profileResolver,
 };
 
 export const postsQuery = {
@@ -25,7 +45,23 @@ export const postsQuery = {
   resolve: postsResolver,
 };
 
+export const postQuery = {
+  type: postType,
+  args: {
+    id: { type: GraphQLID },
+  },
+  resolve: postResolver,
+};
+
 export const memberTypesQuery = {
   type: new GraphQLList(memberTypeType),
   resolve: memberTypesResolver,
+};
+
+export const memberTypeQuery = {
+  type: memberTypeType,
+  args: {
+    id: { type: GraphQLID },
+  },
+  resolve: memberTypeResolver,
 };
