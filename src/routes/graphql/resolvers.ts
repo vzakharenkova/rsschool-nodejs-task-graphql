@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { CreateUserDTO } from '../../utils/DB/entities/DBUsers';
 import {
   getMemberTypeById,
   getMemberTypes,
@@ -13,7 +14,7 @@ import {
   getProfileByUserId,
   getProfiles,
 } from '../profiles/profilesHandlers';
-import { getUserById, getUsers } from '../users/usersHandlers';
+import { createUser, getUserById, getUsers } from '../users/usersHandlers';
 
 export async function usersResolver(
   _parent: any,
@@ -29,6 +30,18 @@ export async function userResolver(
   context: FastifyInstance
 ) {
   return await getUserById(context, args.id);
+}
+
+export async function createUserResolver(
+  _parent: any,
+  args: { data: CreateUserDTO },
+  context: FastifyInstance
+) {
+  const user: CreateUserDTO = {
+    ...args.data,
+  };
+
+  return await createUser(context, user);
 }
 
 export async function profilesResolver(
