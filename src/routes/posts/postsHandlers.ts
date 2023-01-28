@@ -15,6 +15,22 @@ export async function getPostById(fastify: FastifyInstance, id: string) {
   return post;
 }
 
+export async function getPostsByUserId(
+  fastify: FastifyInstance,
+  userId: string
+) {
+  const post = await fastify.db.posts.findMany({
+    key: 'userId',
+    equals: userId,
+  });
+
+  if (!post.length) {
+    throw fastify.httpErrors.notFound();
+  }
+
+  return post;
+}
+
 export async function createPost(
   fastify: FastifyInstance,
   postData: CreatePostDTO

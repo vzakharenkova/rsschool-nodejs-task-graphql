@@ -21,6 +21,22 @@ export async function getProfileById(fastify: FastifyInstance, id: string) {
   return profile;
 }
 
+export async function getProfileByUserId(
+  fastify: FastifyInstance,
+  userId: string
+) {
+  const profile = await fastify.db.profiles.findOne({
+    key: 'userId',
+    equals: userId,
+  });
+
+  if (!profile) {
+    throw fastify.httpErrors.notFound();
+  }
+
+  return profile;
+}
+
 export async function createProfile(
   fastify: FastifyInstance,
   profileData: CreateProfileDTO
