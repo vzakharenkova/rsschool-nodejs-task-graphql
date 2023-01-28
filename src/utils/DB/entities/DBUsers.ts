@@ -16,6 +16,12 @@ export default class DBUsers extends DBEntity<
   ChangeUserDTO,
   CreateUserDTO
 > {
+  constructor() {
+    super();
+    this.create({ firstName: 'Tom', lastName: 'Ssfs', email: 'dddd' });
+    this.create({ firstName: 'Aw', lastName: 'swSsfs', email: 'ddssdd' });
+  }
+
   async create(dto: CreateUserDTO) {
     const created: UserEntity = {
       ...dto,

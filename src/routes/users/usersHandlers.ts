@@ -29,20 +29,23 @@ export async function deleteUser(fastify: FastifyInstance, id: string) {
     throw fastify.httpErrors.badRequest();
   }
 
-  user.subscribedToUserIds.forEach(async (i) => {
-    const sub = await fastify.db.users.findOne({ key: 'id', equals: i });
-
-    if (sub) {
-      const index = sub.subscribedToUserIds.findIndex((n) => n === id);
-      const subs = [...sub.subscribedToUserIds];
-
-      subs.splice(index, 1);
-
-      await fastify.db.users.change(i, {
-        subscribedToUserIds: subs,
-      });
-    }
+  const subs = await fastify.db.users.findMany({
+    key: 'subscribedToUserIds',
+    inArray: id,
   });
+
+  if (subs.length) {
+    subs.forEach(async (sub) => {
+      const index = sub.subscribedToUserIds.findIndex((n) => n === id);
+      const sub_subs = [...sub.subscribedToUserIds];
+
+      sub_subs.splice(index, 1);
+
+      await fastify.db.users.change(sub.id, {
+        subscribedToUserIds: sub_subs,
+      });
+    });
+  }
 
   const profile = await fastify.db.profiles.findOne({
     key: 'userId',
@@ -80,12 +83,8 @@ export async function subscrideToUser(
     throw fastify.httpErrors.notFound();
   }
 
-  await fastify.db.users.change(subId, {
+  return await fastify.db.users.change(subId, {
     subscribedToUserIds: [...sub.subscribedToUserIds, userId],
-  });
-
-  return await fastify.db.users.change(userId, {
-    subscribedToUserIds: [...user.subscribedToUserIds, subId],
   });
 }
 
@@ -104,26 +103,18 @@ export async function unsubscrideFromUser(
     throw fastify.httpErrors.notFound();
   }
 
-  const index_user = user.subscribedToUserIds.findIndex((i) => i === subId);
-
   const index_sub = sub.subscribedToUserIds.findIndex((i) => i === userId);
 
-  if (index_user < 0 || index_sub < 0) {
+  if (index_sub < 0) {
     throw fastify.httpErrors.badRequest();
   }
 
-  const subs_user = [...user.subscribedToUserIds];
   const subs_sub = [...sub.subscribedToUserIds];
 
-  subs_user.splice(index_user, 1);
   subs_sub.splice(index_sub, 1);
 
-  await fastify.db.users.change(subId, {
+  return await fastify.db.users.change(subId, {
     subscribedToUserIds: subs_sub,
-  });
-
-  return await fastify.db.users.change(userId, {
-    subscribedToUserIds: subs_user,
   });
 }
 
