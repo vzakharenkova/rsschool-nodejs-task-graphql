@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { CreateProfileDTO } from '../../utils/DB/entities/DBProfiles';
 import { CreateUserDTO } from '../../utils/DB/entities/DBUsers';
 import {
   getMemberTypeById,
@@ -10,6 +11,7 @@ import {
   getPostsByUserId,
 } from '../posts/postsHandlers';
 import {
+  createProfile,
   getProfileById,
   getProfileByUserId,
   getProfiles,
@@ -66,6 +68,18 @@ export async function profileByUserIdResolver(
   context: FastifyInstance
 ) {
   return await getProfileByUserId(context, parent.id);
+}
+
+export async function createProfileResolver(
+  _parent: any,
+  args: { data: CreateProfileDTO },
+  context: FastifyInstance
+) {
+  const profile: CreateProfileDTO = {
+    ...args.data,
+  };
+
+  return await createProfile(context, profile);
 }
 
 export async function postsResolver(
