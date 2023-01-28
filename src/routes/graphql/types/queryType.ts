@@ -1,8 +1,10 @@
 import { GraphQLObjectType } from 'graphql';
-import { memberTypesQuery } from '../queries/memberTypesQuery';
-import { postsQuery } from '../queries/postsQuery';
-import { profilesQuery } from '../queries/profilesQuery';
-import { usersQuery } from '../queries/usersQuery';
+import {
+  usersQuery,
+  postsQuery,
+  profilesQuery,
+  memberTypesQuery,
+} from '../queries';
 
 export const queryType = new GraphQLObjectType({
   name: 'Query',
