@@ -102,3 +102,14 @@ export async function memberTypeByUserIdResolver(
 ) {
   return await getMemberTypeById(context, parent.profile.memberTypeId);
 }
+
+export async function userSubscribedToResolver(
+  parent: any,
+  _args: any,
+  context: FastifyInstance
+) {
+  return await context.db.users.findMany({
+    key: 'subscribedToUserIds',
+    inArray: parent.id,
+  });
+}

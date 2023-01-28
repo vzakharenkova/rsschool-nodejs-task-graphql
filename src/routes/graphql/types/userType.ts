@@ -9,10 +9,22 @@ import {
   memberTypeByUserIdResolver,
   postsByUserIdResolver,
   profileByUserIdResolver,
+  userSubscribedToResolver,
 } from '../resolvers';
 import { memberTypeType } from './memberTypeType';
 import { postType } from './postType';
 import { profileType } from './profileType';
+
+const basicUserType = new GraphQLObjectType({
+  name: 'BasicUser',
+  fields: {
+    id: { type: GraphQLID },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    email: { type: GraphQLString },
+    subscribedToUserIds: { type: new GraphQLList(GraphQLID) },
+  },
+});
 
 export const userType = new GraphQLObjectType({
   name: 'User',
@@ -24,9 +36,6 @@ export const userType = new GraphQLObjectType({
     subscribedToUserIds: { type: new GraphQLList(GraphQLID) },
     profile: {
       type: profileType,
-      args: {
-        id: { type: GraphQLID },
-      },
       resolve: profileByUserIdResolver,
     },
     posts: {
@@ -35,10 +44,11 @@ export const userType = new GraphQLObjectType({
     },
     memberType: {
       type: memberTypeType,
-      args: {
-        id: { type: GraphQLID },
-      },
       resolve: memberTypeByUserIdResolver,
+    },
+    userSubscribedTo: {
+      type: new GraphQLList(basicUserType),
+      resolve: userSubscribedToResolver,
     },
   },
 });

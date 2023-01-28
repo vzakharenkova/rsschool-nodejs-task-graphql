@@ -45,16 +45,30 @@
          }
 `
      2.2. Get user, profile, post, memberType by id - 4 operations in one query.
-     `    query ($id: ID) {
+     ` query ($id: ID) {
         user(id: $id) { id }
         profile(id: $id) { id }
         post(id: $id) { id }
         memberType(id: $id) { id }
         }
-   `
+`
      2.3. Get users with their posts, profiles, memberTypes.  
       2.4. Get user by id with his posts, profile, memberType.  
-      2.5. Get users with their `userSubscribedTo`, profile.  
+      2.5. Get users with their `userSubscribedTo`, profile.
+     `    query {
+                users {
+                    id
+                    firstName
+                    userSubscribedTo {
+                        id
+                        firstName
+                    }
+                    profile {
+                        id
+                    }             
+                }
+            }
+   `  
       2.6. Get user by id with his `subscribedToUser`, posts.  
       2.7. Get users with their `userSubscribedTo`, `subscribedToUser` (additionally for each user in `userSubscribedTo`, `subscribedToUser` add their `userSubscribedTo`, `subscribedToUser`).
    - Create gql requests:  
