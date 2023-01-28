@@ -92,9 +92,37 @@
      }
      ``` 
    - Create gql requests:  
-     2.8. Create user.  
-     2.9. Create profile.  
-     2.10. Create post.  
+     2.8. Create user. 
+      ```    
+     mutation ($data: CreateUserInput!) {
+        createUser(data: $data) {
+            id
+            firstName
+            lastName
+            subscribedToUserIds
+        }
+     }
+     ```  
+     2.9. Create profile. 
+     ```
+     mutation ($data: CreateProfileInput!) {
+         createProfile(data: $data) {
+            id
+            userId
+         }
+     } 
+     ```
+     2.10. Create post.
+     ```
+     mutation ($data: CreatePostInput!) {
+         createPost(data: $data) {
+            id
+            title
+            content
+            userId
+         }
+     }
+     ```
      2.11. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
    - Update gql requests:  
      2.12. Update user.  
