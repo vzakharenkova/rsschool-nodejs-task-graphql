@@ -68,7 +68,7 @@ export async function deleteUser(fastify: FastifyInstance, id: string) {
   return await fastify.db.users.delete(id);
 }
 
-export async function subscrideToUser(
+export async function subscribeToUser(
   fastify: FastifyInstance,
   userId: string,
   subId: string
@@ -88,7 +88,7 @@ export async function subscrideToUser(
   });
 }
 
-export async function unsubscrideFromUser(
+export async function unsubscribeFromUser(
   fastify: FastifyInstance,
   userId: string,
   subId: string

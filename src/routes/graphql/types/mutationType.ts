@@ -3,6 +3,12 @@ import {
   createPostMutation,
   createProfileMutation,
   createUserMutation,
+  subscribeToMutation,
+  unsubscribeFromMutation,
+  updateMemberTypeMutation,
+  updatePostMutation,
+  updateProfileMutation,
+  updateUserMutation,
 } from '../mutations';
 
 export const mutationType = new GraphQLObjectType({
@@ -11,5 +17,11 @@ export const mutationType = new GraphQLObjectType({
     createUser: createUserMutation,
     createProfile: createProfileMutation,
     createPost: createPostMutation,
+    updateUser: updateUserMutation,
+    updateProfile: updateProfileMutation,
+    updatePost: updatePostMutation,
+    updateMemberType: updateMemberTypeMutation,
+    subscribeTo: subscribeToMutation,
+    unsubscribeFrom: unsubscribeFromMutation,
   },
 });

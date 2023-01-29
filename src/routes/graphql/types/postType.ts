@@ -24,3 +24,11 @@ export const createPostInputType = new GraphQLInputObjectType({
   name: 'CreatePostInput',
   fields: postFields,
 });
+
+export const updatePostInputType = new GraphQLInputObjectType({
+  name: 'UpdatePostInput',
+  fields: {
+    title: { type: GraphQLString },
+    content: { type: GraphQLString },
+  },
+});

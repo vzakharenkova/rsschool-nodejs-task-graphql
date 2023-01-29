@@ -1,24 +1,38 @@
 import { FastifyInstance } from 'fastify';
-import { CreatePostDTO } from '../../utils/DB/entities/DBPosts';
-import { CreateProfileDTO } from '../../utils/DB/entities/DBProfiles';
-import { CreateUserDTO } from '../../utils/DB/entities/DBUsers';
+import { ChangeMemberTypeDTO } from '../../utils/DB/entities/DBMemberTypes';
+import { ChangePostDTO, CreatePostDTO } from '../../utils/DB/entities/DBPosts';
+import {
+  ChangeProfileDTO,
+  CreateProfileDTO,
+} from '../../utils/DB/entities/DBProfiles';
+import { ChangeUserDTO, CreateUserDTO } from '../../utils/DB/entities/DBUsers';
 import {
   getMemberTypeById,
   getMemberTypes,
+  updateMemberType,
 } from '../member-types/memberTypesHandlers';
 import {
   createPost,
   getPostById,
   getPosts,
   getPostsByUserId,
+  updatePost,
 } from '../posts/postsHandlers';
 import {
   createProfile,
   getProfileById,
   getProfileByUserId,
   getProfiles,
+  updateProfile,
 } from '../profiles/profilesHandlers';
-import { createUser, getUserById, getUsers } from '../users/usersHandlers';
+import {
+  createUser,
+  getUserById,
+  getUsers,
+  subscribeToUser,
+  unsubscribeFromUser,
+  updateUser,
+} from '../users/usersHandlers';
 
 export async function usersResolver(
   _parent: any,
@@ -46,6 +60,18 @@ export async function createUserResolver(
   };
 
   return await createUser(context, user);
+}
+
+export async function updateUserResolver(
+  _parent: any,
+  args: { id: string; data: ChangeUserDTO },
+  context: FastifyInstance
+) {
+  const user: ChangeUserDTO = {
+    ...args.data,
+  };
+
+  return await updateUser(context, args.id, user);
 }
 
 export async function profilesResolver(
@@ -84,6 +110,18 @@ export async function createProfileResolver(
   return await createProfile(context, profile);
 }
 
+export async function updateProfileResolver(
+  _parent: any,
+  args: { id: string; data: ChangeProfileDTO },
+  context: FastifyInstance
+) {
+  const profile: ChangeProfileDTO = {
+    ...args.data,
+  };
+
+  return await updateProfile(context, args.id, profile);
+}
+
 export async function postsResolver(
   _parent: any,
   _args: any,
@@ -120,6 +158,18 @@ export async function createPostResolver(
   return await createPost(context, post);
 }
 
+export async function updatePostResolver(
+  _parent: any,
+  args: { id: string; data: ChangePostDTO },
+  context: FastifyInstance
+) {
+  const post: ChangePostDTO = {
+    ...args.data,
+  };
+
+  return await updatePost(context, args.id, post);
+}
+
 export async function memberTypesResolver(
   _parent: any,
   _args: any,
@@ -144,6 +194,18 @@ export async function memberTypeByUserIdResolver(
   return await getMemberTypeById(context, parent.profile.memberTypeId);
 }
 
+export async function updateMemberTypeResolver(
+  _parent: any,
+  args: { id: string; data: ChangeMemberTypeDTO },
+  context: FastifyInstance
+) {
+  const memberType: ChangeMemberTypeDTO = {
+    ...args.data,
+  };
+
+  return await updateMemberType(context, args.id, memberType);
+}
+
 export async function userSubscribedToResolver(
   parent: any,
   _args: any,
@@ -166,4 +228,28 @@ export async function subscribedToUserResolver(
       equals: id,
     });
   });
+}
+
+export async function subscribeResolver(
+  _parent: any,
+  args: { id: string; data: { userId: string } },
+  context: FastifyInstance
+) {
+  const sub: { userId: string } = {
+    ...args.data,
+  };
+
+  return await subscribeToUser(context, args.id, sub.userId);
+}
+
+export async function unsubscribeResolver(
+  _parent: any,
+  args: { id: string; data: { userId: string } },
+  context: FastifyInstance
+) {
+  const sub: { userId: string } = {
+    ...args.data,
+  };
+
+  return await unsubscribeFromUser(context, args.id, sub.userId);
 }

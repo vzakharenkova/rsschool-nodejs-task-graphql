@@ -86,3 +86,12 @@ export const createUserInputType = new GraphQLInputObjectType({
     email: { type: new GraphQLNonNull(GraphQLString) },
   },
 });
+
+export const updateUserInputType = new GraphQLInputObjectType({
+  name: 'UpdateUserInput',
+  fields: {
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    email: { type: GraphQLString },
+  },
+});

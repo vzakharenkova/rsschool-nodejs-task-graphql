@@ -11,8 +11,8 @@ import {
   getUserById,
   createUser,
   deleteUser,
-  subscrideToUser,
-  unsubscrideFromUser,
+  subscribeToUser,
+  unsubscribeFromUser,
   updateUser,
 } from './usersHandlers';
 
@@ -74,7 +74,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     async function (request, reply): Promise<UserEntity> {
       const { id } = request.params;
 
-      return await subscrideToUser(fastify, id, request.body.userId);
+      return await subscribeToUser(fastify, id, request.body.userId);
     }
   );
 
@@ -89,7 +89,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     async function (request, reply): Promise<UserEntity | null> {
       const { id } = request.params;
 
-      return await unsubscrideFromUser(fastify, id, request.body.userId);
+      return await unsubscribeFromUser(fastify, id, request.body.userId);
     }
   );
 
