@@ -165,7 +165,23 @@
          }
      }
      ```
-     2.16. Subscribe to; unsubscribe from.  
+     2.16. Subscribe to; unsubscribe from.
+     ```
+     mutation ($id: ID! $data: subscribeInput!) {
+         subscribeTo(id: $id data: $data) {
+            id
+            firstName
+         }
+     }
+     ```
+     ```
+     mutation ($id: ID! $data: subscribeInput!) {
+         unsubscribeFrom(id: $id data: $data) {
+            id
+            firstName
+         }
+     }
+     ```
      2.17. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
 
 3. Solve `n+1` graphql problem with [dataloader](https://www.npmjs.com/package/dataloader) package in all places where it should be used.  
