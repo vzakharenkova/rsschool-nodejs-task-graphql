@@ -15,7 +15,7 @@ export async function getProfileById(fastify: FastifyInstance, id: string) {
   });
 
   if (!profile) {
-    throw fastify.httpErrors.notFound();
+    throw fastify.httpErrors.notFound(`Profile with id ${id} is not found`);
   }
 
   return profile;
@@ -31,7 +31,9 @@ export async function getProfileByUserId(
   });
 
   if (!profile) {
-    throw fastify.httpErrors.notFound();
+    throw fastify.httpErrors.notFound(
+      `Profile for user with id ${userId} is not found`
+    );
   }
 
   return profile;
@@ -48,7 +50,11 @@ export async function createProfile(
   const memberType = ['basic', 'business'];
 
   if (profile || !memberType.includes(profileData.memberTypeId)) {
-    throw fastify.httpErrors.badRequest();
+    const msg = profile
+      ? `Profile for user with id ${profileData.userId} is already exist`
+      : `Inappropriate memberTypeId`;
+
+    throw fastify.httpErrors.badRequest(msg);
   }
 
   return await fastify.db.profiles.create(profileData);
@@ -61,7 +67,7 @@ export async function deleteProfile(fastify: FastifyInstance, id: string) {
   });
 
   if (!profile) {
-    throw fastify.httpErrors.badRequest();
+    throw fastify.httpErrors.badRequest(`Profile with id ${id} is not found`);
   }
 
   return await fastify.db.profiles.delete(id);
@@ -78,7 +84,7 @@ export async function updateProfile(
   });
 
   if (!profile) {
-    throw fastify.httpErrors.badRequest();
+    throw fastify.httpErrors.badRequest(`Profile with id ${id} is not found`);
   }
 
   return await fastify.db.profiles.change(id, profileData);

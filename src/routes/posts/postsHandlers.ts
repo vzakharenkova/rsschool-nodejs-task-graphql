@@ -9,7 +9,7 @@ export async function getPostById(fastify: FastifyInstance, id: string) {
   const post = await fastify.db.posts.findOne({ key: 'id', equals: id });
 
   if (!post) {
-    throw fastify.httpErrors.notFound();
+    throw fastify.httpErrors.notFound(`Post with id ${id} is not found`);
   }
 
   return post;
@@ -25,7 +25,9 @@ export async function getPostsByUserId(
   });
 
   if (!post.length) {
-    throw fastify.httpErrors.notFound();
+    throw fastify.httpErrors.notFound(
+      `Posts for user with id ${userId} are not found`
+    );
   }
 
   return post;
@@ -42,7 +44,7 @@ export async function deletePost(fastify: FastifyInstance, id: string) {
   const post = await fastify.db.posts.findOne({ key: 'id', equals: id });
 
   if (!post) {
-    throw fastify.httpErrors.badRequest();
+    throw fastify.httpErrors.badRequest(`Post with id ${id} is not found`);
   }
 
   return await fastify.db.posts.delete(id);
@@ -56,7 +58,7 @@ export async function updatePost(
   const post = await fastify.db.posts.findOne({ key: 'id', equals: id });
 
   if (!post) {
-    throw fastify.httpErrors.badRequest();
+    throw fastify.httpErrors.badRequest(`Post with id ${id} is not found`);
   }
 
   return await fastify.db.posts.change(id, postData);

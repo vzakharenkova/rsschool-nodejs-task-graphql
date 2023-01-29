@@ -9,7 +9,7 @@ export async function getUserById(fastify: FastifyInstance, id: string) {
   const user = await fastify.db.users.findOne({ key: 'id', equals: id });
 
   if (!user) {
-    throw fastify.httpErrors.notFound();
+    throw fastify.httpErrors.notFound(`User with id ${id} is not found`);
   }
 
   return user;
@@ -26,7 +26,7 @@ export async function deleteUser(fastify: FastifyInstance, id: string) {
   const user = await fastify.db.users.findOne({ key: 'id', equals: id });
 
   if (!user) {
-    throw fastify.httpErrors.badRequest();
+    throw fastify.httpErrors.badRequest(`User with id ${id} is not found`);
   }
 
   const subs = await fastify.db.users.findMany({
@@ -80,7 +80,11 @@ export async function subscribeToUser(
   });
 
   if (!user || !sub) {
-    throw fastify.httpErrors.notFound();
+    const msg = !user
+      ? `User with id ${userId} is not found`
+      : `Can not subscribe to unexisting user with id ${subId}`;
+
+    throw fastify.httpErrors.notFound(msg);
   }
 
   return await fastify.db.users.change(subId, {
@@ -100,13 +104,19 @@ export async function unsubscribeFromUser(
   });
 
   if (!user || !sub) {
-    throw fastify.httpErrors.notFound();
+    const msg = !user
+      ? `User with id ${userId} is not found`
+      : `Can not unsubscribe from unexisting user with id ${subId}`;
+
+    throw fastify.httpErrors.notFound(msg);
   }
 
   const index_sub = sub.subscribedToUserIds.findIndex((i) => i === userId);
 
   if (index_sub < 0) {
-    throw fastify.httpErrors.badRequest();
+    throw fastify.httpErrors.badRequest(
+      `User is not following the user with id ${subId}`
+    );
   }
 
   const subs_sub = [...sub.subscribedToUserIds];
@@ -126,7 +136,7 @@ export async function updateUser(
   const user = await fastify.db.users.findOne({ key: 'id', equals: id });
 
   if (!user) {
-    throw fastify.httpErrors.badRequest();
+    throw fastify.httpErrors.badRequest(`User with id ${id} is not found`);
   }
 
   return await fastify.db.users.change(id, userData);
