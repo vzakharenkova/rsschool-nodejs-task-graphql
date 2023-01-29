@@ -125,11 +125,63 @@
      ```
      2.11. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
    - Update gql requests:  
-     2.12. Update user.  
-     2.13. Update profile.  
-     2.14. Update post.  
-     2.15. Update memberType.  
-     2.16. Subscribe to; unsubscribe from.  
+     2.12. Update user. 
+     ```
+     mutation ($id: ID! $data: UpdateUserInput!) {
+         updateUser(id: $id data: $data) {
+            id
+            firstName
+            lastName
+         }
+     }
+     ```
+     2.13. Update profile.
+     ```
+     mutation ($id: ID! $data: UpdateProfileInput!) {
+         updateProfile(id: $id data: $data) {
+            id
+            avatar
+         }
+     }
+     ```
+     2.14. Update post.
+     ```
+     mutation ($id: ID! $data: UpdatePostInput!) {
+         updatePost(id: $id data: $data) {
+            id
+            title
+            content
+            userId
+         }
+     }
+     ```
+     2.15. Update memberType.
+     ```   
+     mutation ($id: ID! $data: UpdateMemberTypeInput!) {
+         updateMemberType(id: $id data: $data) {
+            id
+            discount
+            monthPostsLimit
+         }
+     }
+     ```
+     2.16. Subscribe to; unsubscribe from.
+     ```
+     mutation ($id: ID! $data: subscribeInput!) {
+         subscribeTo(id: $id data: $data) {
+            id
+            firstName
+         }
+     }
+     ```
+     ```
+     mutation ($id: ID! $data: subscribeInput!) {
+         unsubscribeFrom(id: $id data: $data) {
+            id
+            firstName
+         }
+     }
+     ```
      2.17. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
 
 3. Solve `n+1` graphql problem with [dataloader](https://www.npmjs.com/package/dataloader) package in all places where it should be used.  
