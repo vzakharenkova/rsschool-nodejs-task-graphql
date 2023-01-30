@@ -1,5 +1,6 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
-import { graphql, GraphQLSchema } from 'graphql';
+import { graphql, GraphQLSchema, validate, parse } from 'graphql';
+import depthLimit = require('graphql-depth-limit');
 import { graphqlBodySchema } from './schema';
 import { mutationType } from './types/mutationType';
 import { queryType } from './types/queryType';
@@ -23,12 +24,16 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       const source: string = String(request.body.query);
       const variableValues = request.body.variables;
 
-      return await graphql({
-        schema: schemaGQL,
-        source,
-        variableValues,
-        contextValue: fastify,
-      });
+      const errValidation = validate(schemaGQL, parse(source), [depthLimit(3)]);
+
+      return errValidation.length
+        ? { errors: errValidation }
+        : await graphql({
+            schema: schemaGQL,
+            source,
+            variableValues,
+            contextValue: fastify,
+          });
     }
   );
 };
