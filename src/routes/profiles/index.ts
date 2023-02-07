@@ -2,13 +2,20 @@ import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-sc
 import { idParamSchema } from '../../utils/reusedSchemas';
 import { createProfileBodySchema, changeProfileBodySchema } from './schema';
 import type { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
+import {
+  createProfile,
+  deleteProfile,
+  getProfileById,
+  getProfiles,
+  updateProfile,
+} from './profilesHandlers';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
 ): Promise<void> => {
-  fastify.get('/', async function (request, reply): Promise<
-    ProfileEntity[]
-  > {});
+  fastify.get('/', async function (request, reply): Promise<ProfileEntity[]> {
+    return await getProfiles(fastify);
+  });
 
   fastify.get(
     '/:id',
@@ -17,7 +24,11 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
-    async function (request, reply): Promise<ProfileEntity> {}
+    async function (request, reply): Promise<ProfileEntity> {
+      const { id } = request.params;
+
+      return await getProfileById(fastify, id);
+    }
   );
 
   fastify.post(
@@ -27,7 +38,9 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         body: createProfileBodySchema,
       },
     },
-    async function (request, reply): Promise<ProfileEntity> {}
+    async function (request, reply): Promise<ProfileEntity> {
+      return await createProfile(fastify, request.body);
+    }
   );
 
   fastify.delete(
@@ -37,7 +50,11 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
-    async function (request, reply): Promise<ProfileEntity> {}
+    async function (request, reply): Promise<ProfileEntity> {
+      const { id } = request.params;
+
+      return await deleteProfile(fastify, id);
+    }
   );
 
   fastify.patch(
@@ -48,7 +65,11 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
-    async function (request, reply): Promise<ProfileEntity> {}
+    async function (request, reply): Promise<ProfileEntity> {
+      const { id } = request.params;
+
+      return await updateProfile(fastify, id, request.body);
+    }
   );
 };
 
